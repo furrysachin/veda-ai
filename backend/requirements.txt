@@ -1,0 +1,10 @@
+fastapi
+uvicorn[standard]
+python-multipart
+pymupdf
+rapidfuzz
+google-genai
+reportlab
+pydantic
+pydantic-settings
+python-dotenv

@@ -1,0 +1,58 @@
+# Dependencies
+node_modules/
+__pycache__/
+*.pyc
+*.pyo
+.venv/
+venv/
+
+# Build
+dist/
+build/
+*.egg-info/
+
+# Environment files (NEVER commit secrets)
+.env
+.env.local
+.env.*.local
+
+# Backend data
+backend/uploads/
+backend/processed/
+backend/*.log
+backend/*.log.err
+
+# Backend test/debug files
+backend/a_text*.txt
+backend/q_text*.txt
+backend/test_output*.txt
+backend/check_implementation.py
+backend/poll_status*.py
+backend/start_server.py
+backend/test_*.py
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# OS
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# Freebuff
+.freebuff/
+
+# Python
+*.pyc
+__pycache__/
+.pytest_cache/
+
+# Logs
+*.log
+
+# Misc
+error.m

@@ -407,8 +407,8 @@ export default function App() {
                 </>
               ) : (
                 <div className="flex items-center gap-2">
-                  <button onClick={() => openAuthModal("login")} className="rounded-full border border-[#d4d6db] bg-white px-4 py-2 text-sm font-medium text-[#303030] shadow-sm transition-all duration-200 hover:-translate-y-0.5 hover:bg-[#f5f6f7] hover:shadow-[0_4px_14px_rgba(0,0,0,0.1)] active:scale-[0.97]">Sign In</button>
-                  <button onClick={() => openAuthModal("signup")} className="rounded-full bg-[#303030] px-4 py-2 text-sm font-medium text-white shadow-[0_4px_14px_rgba(0,0,0,0.25)] transition-all duration-200 hover:-translate-y-0.5 hover:bg-[#1f1f1f] hover:shadow-[0_6px_20px_rgba(0,0,0,0.35)] active:scale-[0.97]">Sign Up</button>
+                  <button onClick={() => openAuthModal("login")} className="rounded-full border border-[#d4d6db] bg-white px-3 py-1.5 text-xs font-medium text-[#303030] shadow-sm transition-all duration-200 hover:-translate-y-0.5 hover:bg-[#f5f6f7] hover:shadow-[0_4px_14px_rgba(0,0,0,0.1)] active:scale-[0.97] sm:px-4 sm:py-2 sm:text-sm">Sign In</button>
+                  <button onClick={() => openAuthModal("signup")} className="rounded-full bg-[#303030] px-3 py-1.5 text-xs font-medium text-white shadow-[0_4px_14px_rgba(0,0,0,0.25)] transition-all duration-200 hover:-translate-y-0.5 hover:bg-[#1f1f1f] hover:shadow-[0_6px_20px_rgba(0,0,0,0.35)] active:scale-[0.97] sm:px-4 sm:py-2 sm:text-sm">Sign Up</button>
                 </div>
               )}
               <button onClick={() => setMenuOpen(true)} className="rounded-full bg-[#f7f7f7] p-2 text-[#2f3135] shadow-sm transition-all duration-200 hover:bg-[#efefef] hover:shadow-[0_4px_12px_rgba(0,0,0,0.08)] active:scale-95 lg:hidden" aria-label="Open menu">

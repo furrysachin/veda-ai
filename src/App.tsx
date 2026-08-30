@@ -130,15 +130,32 @@ export default function App() {
       const assessmentId: string = uploadJson.assessment_id;
       console.log("[VedaAI] Uploaded", assessmentId);
 
-      const processRes = await fetch(api(`/assessment/${assessmentId}/process`), {
-        method: "POST",
-      });
-      if (!processRes.ok) {
-        const text = await processRes.text().catch(() => "");
-        throw new Error(`Process start failed (${processRes.status}): ${text || processRes.statusText}`);
+      // Try polling first (works with local backend), fallback to direct result (Vercel)
+      let finalJson: any = null;
+      try {
+        const processRes = await fetch(api(`/assessment/${assessmentId}/process`), {
+          method: "POST",
+        });
+        if (!processRes.ok) {
+          const text = await processRes.text().catch(() => "");
+          throw new Error(`Process start failed (${processRes.status}): ${text || processRes.statusText}`);
+        }
+        const processJson = await processRes.json();
+        // If Vercel backend returned the full result directly (sync mode)
+        if (processJson.status === "completed" && Array.isArray(processJson.questions)) {
+          finalJson = processJson;
+        } else {
+          // Local backend - poll for status
+          finalJson = await pollUntilDone(assessmentId);
+        }
+      } catch (pollErr) {
+        // Polling failed, try fetching result directly
+        console.warn("[VedaAI] Polling failed, trying direct result fetch:", pollErr);
+        const resultRes = await fetch(api(`/assessment/${assessmentId}`));
+        if (resultRes.ok) {
+          finalJson = await resultRes.json();
+        }
       }
-
-      const finalJson = await pollUntilDone(assessmentId);
       applyResult(finalJson);
     } catch (err: any) {
       console.error("[VedaAI] API call failed:", err);

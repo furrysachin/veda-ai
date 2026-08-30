@@ -60,16 +60,37 @@ const API_URL = (import.meta.env.VITE_API_URL as string | undefined) || "http://
 
 const DEFAULT_REVIEW_QUESTIONS: ReviewQuestion[] = [];
 
+/** sessionStorage helpers for persisting results across reloads */
+const STORAGE_KEY = "vedaai_session";
+
+function saveSession(data: { viewState: ViewState; reviewQuestions: ReviewQuestion[]; answerSheetPages: AnswerSheetPage[]; activeQuestionId: number; activeAnswerPage: number; unmappedSegments: UnmappedSegmentFE[] }) {
+  try { sessionStorage.setItem(STORAGE_KEY, JSON.stringify(data)); } catch { /* quota exceeded */ }
+}
+
+function loadSession(): { viewState: ViewState; reviewQuestions: ReviewQuestion[]; answerSheetPages: AnswerSheetPage[]; activeQuestionId: number; activeAnswerPage: number; unmappedSegments: UnmappedSegmentFE[] } | null {
+  try {
+    const raw = sessionStorage.getItem(STORAGE_KEY);
+    if (!raw) return null;
+    const data = JSON.parse(raw);
+    if (data && (data.viewState === "result" || data.viewState === "extracting")) return data;
+    return null;
+  } catch { return null; }
+}
+
+function clearSession() { try { sessionStorage.removeItem(STORAGE_KEY); } catch { /* */ } }
+
 export default function App() {
   const { user, loading: authLoading, logout } = useAuth();
+
+  const savedSession = useMemo(() => loadSession(), []);
 
   const [questionFile, setQuestionFile] = useState<File | null>(null);
   const [answerFile, setAnswerFile] = useState<File | null>(null);
   const [menuOpen, setMenuOpen] = useState(false);
   const [panelCollapsed, setPanelCollapsed] = useState(false);
-  const [viewState, setViewState] = useState<ViewState>("upload");
+  const [viewState, setViewState] = useState<ViewState>(savedSession?.viewState === "result" ? "result" : "upload");
   const [activeNav, setActiveNav] = useState<"home" | "exams" | "library">("exams");
-  const [activeQuestionId, setActiveQuestionId] = useState(2);
+  const [activeQuestionId, setActiveQuestionId] = useState(savedSession?.activeQuestionId ?? 2);
   const [settingsOpen, setSettingsOpen] = useState(false);
   const [libraryOpen, setLibraryOpen] = useState(false);
   const [authOpen, setAuthOpen] = useState(false);
@@ -84,12 +105,12 @@ export default function App() {
   const [authMode, setAuthMode] = useState<"signup" | "login">("signup");
   const [authError, setAuthError] = useState("");
   const [uploadHistory, setUploadHistory] = useState<UploadHistoryItem[]>([]);
-  const [reviewQuestions, setReviewQuestions] = useState<ReviewQuestion[]>(DEFAULT_REVIEW_QUESTIONS);
-  const [answerSheetPages, setAnswerSheetPages] = useState<AnswerSheetPage[]>([]);
-  const [activeAnswerPage, setActiveAnswerPage] = useState<number>(1);
+  const [reviewQuestions, setReviewQuestions] = useState<ReviewQuestion[]>(savedSession?.reviewQuestions ?? DEFAULT_REVIEW_QUESTIONS);
+  const [answerSheetPages, setAnswerSheetPages] = useState<AnswerSheetPage[]>(savedSession?.answerSheetPages ?? []);
+  const [activeAnswerPage, setActiveAnswerPage] = useState<number>(savedSession?.activeAnswerPage ?? 1);
   const [extractingError, setExtractingError] = useState<string | null>(null);
   const [extractingProgress, setExtractingProgress] = useState<{ progress: number; stage: string; message: string }>({ progress: 0, stage: "", message: "" });
-  const [unmappedSegments, setUnmappedSegments] = useState<UnmappedSegmentFE[]>([]);
+  const [unmappedSegments, setUnmappedSegments] = useState<UnmappedSegmentFE[]>(savedSession?.unmappedSegments ?? []);
 
   const isSignedIn = !!user;
 
@@ -105,6 +126,14 @@ export default function App() {
       setSchoolLogo("");
     }
   }, [user]);
+
+  // Persist result state to sessionStorage so reload preserves it
+  useEffect(() => {
+    if (viewState === "result" && reviewQuestions.length > 0) {
+      saveSession({ viewState, reviewQuestions, answerSheetPages, activeQuestionId, activeAnswerPage, unmappedSegments });
+    }
+  }, [viewState, reviewQuestions, answerSheetPages, activeQuestionId, activeAnswerPage, unmappedSegments]);
+
   const displayName = user?.displayName || user?.email?.split("@")[0] || "User";
   const avatarSrc = user?.photoURL || (user?.email ? `https://www.gravatar.com/avatar/${md5(user.email.trim().toLowerCase())}?s=160&d=identicon` : "");
 
@@ -294,6 +323,7 @@ export default function App() {
   };
 
   const resetToUpload = () => {
+    clearSession();
     setViewState("upload");
     setPanelCollapsed(false);
     setMenuOpen(false);
@@ -302,6 +332,7 @@ export default function App() {
   };
 
   const goToExams = () => {
+    clearSession();
     setActiveNav("exams");
     setViewState("upload");
     setMenuOpen(false);
@@ -347,6 +378,7 @@ export default function App() {
 
   const handleLogout = async () => {
     await logout();
+    clearSession();
     setMenuOpen(false);
     localStorage.removeItem("vedaai_school");
     localStorage.removeItem("vedaai_school_logo");

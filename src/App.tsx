@@ -98,6 +98,7 @@ export default function App() {
   const [schoolLogo, setSchoolLogo] = useState(() => localStorage.getItem("vedaai_school_logo") || "");
 
   const mainRef = useRef<HTMLDivElement>(null);
+  const fakeProgressRef = useRef(0);
 
 
 
@@ -145,6 +146,24 @@ export default function App() {
     formData.append("questionPaper", qFile);
     formData.append("answerSheet", aFile);
 
+    // Start fake progress animation (runs independently of API)
+    fakeProgressRef.current = 0;
+    let fakeProgressDone = false;
+    const stages = [
+      { at: 0, stage: "extracting_questions", msg: "Reading question paper..." },
+      { at: 18, stage: "ocr_answer_sheet", msg: "Reading answer sheet..." },
+      { at: 40, stage: "mapping_answers", msg: "Matching answers to questions..." },
+      { at: 62, stage: "evaluating_answers", msg: "AI evaluating answers..." },
+      { at: 82, stage: "rendering_pages", msg: "Preparing answer sheet previews..." },
+    ];
+    const fakeInterval = setInterval(() => {
+      if (fakeProgressDone) return;
+      fakeProgressRef.current += Math.max(1, Math.floor(Math.random() * 3));
+      if (fakeProgressRef.current >= 99) fakeProgressRef.current = 99;
+      const currentStage = [...stages].reverse().find((s) => fakeProgressRef.current >= s.at) || stages[0];
+      setExtractingProgress({ progress: fakeProgressRef.current, stage: currentStage.stage, message: currentStage.msg });
+    }, 600);
+
     try {
       console.log("[VedaAI] Uploading to", API_URL);
       const uploadRes = await fetch(api("/assessment/upload"), {
@@ -168,9 +187,20 @@ export default function App() {
       }
 
       const finalJson = await pollUntilDone(assessmentId);
+
+      // API done — finish fake progress to 100%
+      fakeProgressDone = true;
+      clearInterval(fakeInterval);
+      setExtractingProgress({ progress: 100, stage: "completed", message: "Done!" });
+
+      // Wait 400ms so user sees 100% before switching
+      await new Promise((r) => setTimeout(r, 400));
+
       applyResult(finalJson);
     } catch (err: any) {
       console.error("[VedaAI] API call failed:", err);
+      fakeProgressDone = true;
+      clearInterval(fakeInterval);
       setExtractingError(err?.message || String(err));
       setReviewQuestions(DEFAULT_REVIEW_QUESTIONS);
       setAnswerSheetPages([]);
@@ -199,11 +229,15 @@ export default function App() {
       if (status.status === "failed") {
         throw new Error(status.message || "Processing failed on the server.");
       }
-      setExtractingProgress({
-        progress: typeof status.progress === "number" ? status.progress : 0,
-        stage: status.stage || "",
-        message: status.message || "",
-      });
+      // Only update from server progress if it's ahead of our fake progress
+      const serverProgress = typeof status.progress === "number" ? status.progress : 0;
+      if (serverProgress > fakeProgressRef.current) {
+        setExtractingProgress({
+          progress: serverProgress,
+          stage: status.stage || "",
+          message: status.message || "",
+        });
+      }
       await new Promise((r) => setTimeout(r, 500));
     }
     throw new Error("Processing timed out after 30 minutes.");

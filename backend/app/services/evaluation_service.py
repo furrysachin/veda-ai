@@ -753,26 +753,61 @@ def _local_fallback(
     # Clamp score 0-10
     score = max(0, min(10, total))
 
-    # Build feedback referencing SPECIFIC content
+    # Build UNIQUE, SPECIFIC feedback for each question
+    q_topic = q_words[0] if q_words else question[:30]
+    first_sentence = answer.split("।")[0].strip()[:80] if answer else ""
+    answer_summary = answer[:100].strip() + ("..." if len(answer) > 100 else "")
+
+    # Count unique Hindi terms in answer (not in question) as bonus knowledge
+    answer_only_terms = [w for w in a_words if w not in q_lower and len(w) >= 3]
+    unique_knowledge = answer_only_terms[:5]
+
     if score >= 8:
         result = "correct"
-        feedback = f"Strong answer covering the topic of '{q_words[0] if q_words else question[:20]}'."
-        if strengths:
-            feedback += f" {strengths[0]}."
-        if len(strengths) > 1:
-            feedback += f" {strengths[1]}."
+        fb_parts = [f"Excellent answer on '{q_topic}'."]
+        if has_dates:
+            date_matches = re.findall(r"\b\d{3,4}\b", answer)
+            fb_parts.append(f"Good use of historical dates ({', '.join(date_matches[:3])}).")
+        if has_reasoning:
+            fb_parts.append("Includes cause-effect reasoning which strengthens the answer.")
+        if has_examples:
+            fb_parts.append("Well supported with examples.")
+        if unique_knowledge:
+            fb_parts.append(f"References: {', '.join(unique_knowledge[:3])}.")
+        elif first_sentence:
+            fb_parts.append(f"Answer opens with: '{first_sentence}.'")
+        feedback = " ".join(fb_parts)
     elif score >= 5:
         result = "partially_correct"
-        feedback = f"Answer partially addresses the question about '{q_words[0] if q_words else question[:20]}'."
-        if strengths:
-            feedback += f" {strengths[0]}."
-        if improvements:
-            feedback += f" {improvements[0]}."
+        fb_parts = [f"Answer partially covers '{q_topic}'."]
+        missing = [w for w in q_words if w not in a_lower][:2]
+        if missing:
+            fb_parts.append(f"Missing key concepts: {', '.join(missing)}.")
+        if not has_dates and asks_describe:
+            fb_parts.append("No specific dates or time periods mentioned.")
+        if not has_reasoning and asks_causes:
+            fb_parts.append("Cause-effect relationships not clearly explained.")
+        if not has_comparison and asks_compare:
+            fb_parts.append("Comparison between items is not explicit.")
+        if a_word_count < 30:
+            fb_parts.append(f"Only {a_word_count} words — too brief for a complete answer.")
+        elif unique_knowledge:
+            fb_parts.append(f"Includes some relevant terms: {', '.join(unique_knowledge[:2])}.")
+        feedback = " ".join(fb_parts)
     else:
         result = "incorrect"
-        feedback = f"Answer does not adequately address the question about '{q_words[0] if q_words else question[:20]}'."
-        if improvements:
-            feedback += f" {improvements[0]}."
+        fb_parts = [f"Answer does not adequately address '{q_topic}'."]
+        if not answer.strip():
+            fb_parts.append("No answer content found.")
+        elif a_word_count < 10:
+            fb_parts.append(f"Answer is only {a_word_count} words — far too brief.")
+            fb_parts.append(f"Current content: '{answer_summary}'.")
+        else:
+            fb_parts.append(f"Content found but does not match what was asked.")
+        missing = q_words[:3]
+        if missing:
+            fb_parts.append(f"Expected discussion about: {', '.join(missing)}.")
+        feedback = " ".join(fb_parts)
 
     # Ensure at least one improvement
     if not improvements:

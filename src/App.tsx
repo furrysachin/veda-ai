@@ -55,7 +55,8 @@ type UploadHistoryItem = {
   answerFile?: File;
 };
 
-const API_URL = (import.meta.env.VITE_API_URL as string | undefined) || "http://localhost:8001";
+const API_URL = (import.meta.env.VITE_API_URL as string | undefined) || "http://localhost:8001/api";
+  const api = (path: string) => `${API_URL}${path}`;
 
 const DEFAULT_REVIEW_QUESTIONS: ReviewQuestion[] = [];
 
@@ -117,7 +118,7 @@ export default function App() {
 
     try {
       console.log("[VedaAI] Uploading to", API_URL);
-      const uploadRes = await fetch(`${API_URL}/api/assessment/upload`, {
+      const uploadRes = await fetch(api("/assessment/upload"), {
         method: "POST",
         body: formData,
       });
@@ -129,7 +130,7 @@ export default function App() {
       const assessmentId: string = uploadJson.assessment_id;
       console.log("[VedaAI] Uploaded", assessmentId);
 
-      const processRes = await fetch(`${API_URL}/api/assessment/${assessmentId}/process`, {
+      const processRes = await fetch(api(`/assessment/${assessmentId}/process`), {
         method: "POST",
       });
       if (!processRes.ok) {
@@ -155,14 +156,14 @@ export default function App() {
     let attempt = 0;
     while (Date.now() - startedAt < maxWaitMs) {
       attempt += 1;
-      const statusRes = await fetch(`${API_URL}/api/assessment/${assessmentId}/status`);
+      const statusRes = await fetch(api(`/assessment/${assessmentId}/status`));
       if (!statusRes.ok) {
         throw new Error(`Status check failed (${statusRes.status})`);
       }
       const status = await statusRes.json();
       console.log(`[VedaAI] Status #${attempt}:`, status.status, status.progress, status.stage, status.message);
       if (status.status === "completed") {
-        const resultRes = await fetch(`${API_URL}/api/assessment/${assessmentId}`);
+        const resultRes = await fetch(api(`/assessment/${assessmentId}`));
         if (!resultRes.ok) throw new Error(`Result fetch failed (${resultRes.status})`);
         return await resultRes.json();
       }
@@ -671,7 +672,7 @@ function ResultState({
           return (
             <div key={page.page} id={`answer-page-${page.page}`} className="relative block w-full">
               <img
-                src={`${API_URL}${page.image_url}`}
+                src={page.image_url.startsWith("data:") ? page.image_url : api(page.image_url)}
                 alt={`Answer sheet page ${page.page}`}
                 className="block w-full select-none"
                 draggable={false}

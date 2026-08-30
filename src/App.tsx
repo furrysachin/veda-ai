@@ -446,18 +446,18 @@ export default function App() {
             </div>
           </header>
 
-          <main ref={mainRef} className="hide-scrollbar relative flex min-h-0 flex-1 items-start justify-center overflow-auto rounded-[24px] border border-[#ececec] bg-[#f6f6f6] px-3 pb-8 pt-6 shadow-[inset_0_10px_35px_rgba(120,120,120,0.08)] sm:px-5 sm:pt-8 lg:rounded-[30px] lg:px-8 lg:pt-10">
+          <main ref={mainRef} className="hide-scrollbar relative flex min-h-0 flex-1 items-start justify-center overflow-auto rounded-[24px] border border-[#ececec] bg-[#f6f6f6] px-3 pb-6 pt-4 shadow-[inset_0_10px_35px_rgba(120,120,120,0.08)] sm:px-5 sm:pt-6 lg:rounded-[30px] lg:px-8 lg:pt-8">
             {viewState === "upload" ? (
-              <div className="w-full max-w-[1020px]">
-                <h2 className="mx-auto max-w-[460px] text-center text-xl font-semibold leading-tight text-[#2f3135] sm:max-w-none sm:text-3xl md:text-4xl lg:whitespace-nowrap lg:text-5xl lg:leading-tight">
+              <div className="flex h-full w-full max-w-[1020px] flex-col items-center">
+                <h2 className="mx-auto max-w-[460px] text-center text-lg font-semibold leading-tight text-[#2f3135] sm:max-w-none sm:text-2xl md:text-3xl lg:whitespace-nowrap lg:text-4xl lg:leading-tight">
                   <span className="text-[#2f3135]">Upload </span>
                   <span className="rounded-xl bg-[#ffe9df] px-2 text-[#ff5524]">Question Paper <br className="sm:hidden" />&amp; Answer Sheets</span>
                 </h2>
-                <p className="mt-2 text-center text-sm text-[#5a5d62] sm:mt-3 sm:text-base lg:text-lg">Upload both files to get started</p>
-                <motion.div className="relative mx-auto mt-4 h-[120px] w-[120px] sm:mt-8 sm:h-44 sm:w-44 md:mt-10 md:h-52 md:w-52 lg:h-60 lg:w-60" initial={{ opacity: 0 }} animate={{ opacity: 1 }}>
+                <p className="mt-1.5 text-center text-xs text-[#5a5d62] sm:mt-2 sm:text-sm lg:text-base">Upload both files to get started</p>
+                <motion.div className="relative mx-auto mt-3 h-[100px] w-[100px] sm:mt-4 sm:h-32 sm:w-32 md:mt-6 md:h-44 md:w-44 lg:mt-8 lg:h-52 lg:w-52" initial={{ opacity: 0 }} animate={{ opacity: 1 }}>
                   <div className="absolute inset-0 rounded-full bg-[#f8e7e1]" />
-                  <div className="absolute inset-5 rounded-full bg-[#f9b9a4] sm:inset-[22px]" />
-                  <div className="absolute inset-[36px] overflow-hidden rounded-full bg-white shadow-[0_8px_20px_rgba(0,0,0,0.16)] sm:inset-[46px]">
+                  <div className="absolute inset-4 rounded-full bg-[#f9b9a4] sm:inset-[18px] md:inset-[22px]" />
+                  <div className="absolute inset-[30px] overflow-hidden rounded-full bg-white shadow-[0_8px_20px_rgba(0,0,0,0.16)] sm:inset-[38px] md:inset-[46px]">
                     <img src="/images/teacher-avatar.png" alt="Teacher" className="h-full w-full object-cover object-center" />
                   </div>
                   <OrbitBadge className="left-2 top-[52px] sm:left-[18px] sm:top-[82px]"><DocIcon className="h-3.5 w-3.5" /></OrbitBadge>
@@ -465,17 +465,17 @@ export default function App() {
                   <OrbitBadge className="right-1 top-[88px] sm:right-[6px] sm:top-[138px]"><SparkIcon className="h-3.5 w-3.5" /></OrbitBadge>
                   <OrbitBadge className="left-6 bottom-1 sm:left-[48px] sm:bottom-[14px]"><SettingsIcon className="h-3.5 w-3.5" /></OrbitBadge>
                 </motion.div>
-                <div className="mx-auto mt-5 w-full max-w-[600px] rounded-2xl border border-[#ececec] bg-[#efefef] p-2.5 shadow-[0_4px_12px_rgba(0,0,0,0.05)] sm:mt-6 sm:max-w-[700px] sm:rounded-[28px] sm:p-3 md:max-w-[800px] md:rounded-[34px] md:p-4 lg:max-w-[980px]">
+                <div className="mx-auto mt-3 w-full max-w-[600px] rounded-2xl border border-[#ececec] bg-[#efefef] p-2 shadow-[0_4px_12px_rgba(0,0,0,0.05)] sm:mt-4 sm:max-w-[700px] sm:rounded-[28px] sm:p-3 md:mt-5 md:max-w-[800px] md:rounded-[34px] md:p-4 lg:max-w-[980px]">
                   <div className="grid gap-3 sm:gap-4 md:grid-cols-2">
                     <UploadBox label="Question Paper" file={questionFile} onPick={setQuestionFile} />
                     <UploadBox label="Answer Sheet" file={answerFile} onPick={setAnswerFile} />
                   </div>
                 </div>
-                <motion.button onClick={startMapping} whileHover={canStart ? { y: -2, boxShadow: "0 8px 25px rgba(0,0,0,0.35)" } : undefined} whileTap={canStart ? { scale: 0.97 } : undefined} disabled={!canStart} className={`mx-auto mt-6 flex items-center gap-2 rounded-full border border-transparent px-6 py-2.5 text-sm font-medium shadow-[0_4px_16px_rgba(0,0,0,0.25)] sm:mt-8 sm:px-7 sm:py-3 sm:text-base transition-all duration-300 ease-out sm:px-9 sm:text-lg lg:mt-10 lg:gap-3 lg:px-11 ${canStart ? "border-[#303030] bg-[#303030] text-white shadow-[0_4px_16px_rgba(0,0,0,0.25)]" : "border-[#d0d0d0] bg-[#e0e0e0] text-[#999] cursor-not-allowed"}`}>
+                <motion.button onClick={startMapping} whileHover={canStart ? { y: -2, boxShadow: "0 8px 25px rgba(0,0,0,0.35)" } : undefined} whileTap={canStart ? { scale: 0.97 } : undefined} disabled={!canStart} className={`mx-auto mt-4 flex items-center gap-2 rounded-full border border-transparent px-6 py-2.5 text-sm font-medium shadow-[0_4px_16px_rgba(0,0,0,0.25)] sm:mt-5 sm:px-7 sm:py-3 sm:text-base transition-all duration-300 ease-out md:mt-6 md:px-9 md:text-lg lg:mt-8 lg:gap-3 lg:px-11 ${canStart ? "border-[#303030] bg-[#303030] text-white shadow-[0_4px_16px_rgba(0,0,0,0.25)]" : "border-[#d0d0d0] bg-[#e0e0e0] text-[#999] cursor-not-allowed"}`}>
                   Start Mapping
                   <ArrowRightIcon className="h-5 w-5 sm:h-6 sm:w-6" />
                 </motion.button>
-                <p className="mx-auto mt-3 text-center text-sm text-[#72757a] sm:whitespace-nowrap">Once both files are uploaded you'll able to map<br className="sm:hidden" /> answers with questions.</p>
+                <p className="mx-auto mt-2 text-center text-xs text-[#72757a] sm:text-sm sm:whitespace-nowrap">Once both files are uploaded you'll able to map<br className="sm:hidden" /> answers with questions.</p>
               </div>
             ) : viewState === "extracting" ? (
               <ExtractingState
@@ -1067,13 +1067,13 @@ function OrbitBadge({ className, children }: { className: string; children: Reac
 
 function UploadBox({ label, file, onPick }: { label: string; file: File | null; onPick: (file: File | null) => void }) {
   return (
-    <label className="relative isolate flex min-h-[160px] cursor-pointer flex-col items-center justify-center rounded-[20px] border-2 border-dashed border-[#d4d6da] bg-white px-4 text-center shadow-[0_10px_24px_rgba(0,0,0,0.08)] transition hover:-translate-y-0.5 hover:shadow-[0_14px_30px_rgba(0,0,0,0.12)] sm:min-h-[200px] sm:rounded-[28px] sm:px-5 md:min-h-[222px] md:rounded-[30px]">
+    <label className="relative isolate flex min-h-[120px] cursor-pointer flex-col items-center justify-center rounded-[18px] border-2 border-dashed border-[#d4d6da] bg-white px-3 py-3 text-center shadow-[0_10px_24px_rgba(0,0,0,0.08)] transition hover:-translate-y-0.5 hover:shadow-[0_14px_30px_rgba(0,0,0,0.12)] sm:min-h-[160px] sm:rounded-[24px] sm:px-4 sm:py-4 md:min-h-[200px] md:rounded-[30px] md:px-5">
       <span className="pointer-events-none absolute inset-[6px] -z-10 rounded-[20px] bg-white/70 backdrop-blur-[1px] sm:rounded-[26px]" />
       <span className="pointer-events-none absolute -bottom-4 left-6 right-6 -z-20 h-7 rounded-full bg-white/80 blur-md shadow-[0_10px_20px_rgba(0,0,0,0.16)]" />
       <input type="file" className="hidden" accept=".pdf,.jpg,.jpeg,.png" onChange={(e) => onPick(e.target.files?.[0] ?? null)} />
-      <UploadIcon className="h-7 w-7 text-[#36383c] sm:h-8 sm:w-8" />
-      <p className="mt-3 text-base font-semibold text-[#2f3135] sm:mt-4 sm:text-xl md:text-2xl">Upload <span className="text-[#ff5524]">{label}</span></p>
-      <p className="text-xs text-[#9c9ea4] sm:text-sm">Max 10MB</p>
+      <UploadIcon className="h-6 w-6 text-[#36383c] sm:h-7 sm:w-7 md:h-8 md:w-8" />
+      <p className="mt-2 text-sm font-semibold text-[#2f3135] sm:text-lg md:text-xl">Upload <span className="text-[#ff5524]">{label}</span></p>
+      <p className="text-[10px] text-[#9c9ea4] sm:text-xs">Max 10MB</p>
       {file && <div className="mt-2 flex items-center gap-2 rounded-full border border-[#e0e0e0] bg-[#f5f5f5] px-3 py-1"><span className="max-w-[160px] truncate text-sm text-[#3f4247]">{file.name}</span><button type="button" onClick={(e) => { e.preventDefault(); e.stopPropagation(); onPick(null); }} className="flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-[#d4d4d4] text-[#666] transition-all duration-200 hover:bg-[#ff5a2b] hover:text-white active:scale-90"><CloseIcon className="h-3 w-3" /></button></div>}
     </label>
   );

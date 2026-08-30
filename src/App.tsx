@@ -442,7 +442,7 @@ export default function App() {
                     <UploadBox label="Answer Sheet" file={answerFile} onPick={setAnswerFile} />
                   </div>
                 </div>
-                <motion.button onClick={startMapping} whileHover={canStart ? { y: -2, boxShadow: "0 8px 25px rgba(0,0,0,0.35)" } : undefined} whileTap={canStart ? { scale: 0.97 } : undefined} disabled={!canStart} className={`mx-auto mt-6 flex items-center gap-2 rounded-full border border-transparent px-6 py-2.5 text-sm font-medium shadow-[0_4px_16px_rgba(0,0,0,0.25)] sm:mt-8 sm:px-7 sm:py-3 sm:text-base transition-all duration-300 ease-out sm:px-9 sm:text-lg lg:mt-10 lg:gap-3 lg:px-11 ${canStart ? "border-[#303030] bg-[#303030] text-white shadow-[0_4px_16px_rgba(0,0,0,0.25)]" : "pointer-events-none opacity-0"}`}>
+                <motion.button onClick={startMapping} whileHover={canStart ? { y: -2, boxShadow: "0 8px 25px rgba(0,0,0,0.35)" } : undefined} whileTap={canStart ? { scale: 0.97 } : undefined} disabled={!canStart} className={`mx-auto mt-6 flex items-center gap-2 rounded-full border border-transparent px-6 py-2.5 text-sm font-medium shadow-[0_4px_16px_rgba(0,0,0,0.25)] sm:mt-8 sm:px-7 sm:py-3 sm:text-base transition-all duration-300 ease-out sm:px-9 sm:text-lg lg:mt-10 lg:gap-3 lg:px-11 ${canStart ? "border-[#303030] bg-[#303030] text-white shadow-[0_4px_16px_rgba(0,0,0,0.25)]" : "border-[#d0d0d0] bg-[#e0e0e0] text-[#999] cursor-not-allowed"}`}>
                   Start Mapping
                   <ArrowRightIcon className="h-5 w-5 sm:h-6 sm:w-6" />
                 </motion.button>

@@ -398,7 +398,7 @@ export default function App() {
   }
 
   return (
-    <div className="h-screen overflow-hidden bg-[#dcdcdc] p-2">
+    <div className="h-screen overflow-hidden bg-[#dcdcdc] p-1 sm:p-2">
       <div className="mx-auto flex h-full max-w-[1820px] gap-3">
         <aside className={`hidden rounded-[24px] bg-white shadow-[inset_0_24px_60px_rgba(120,120,120,0.08)] transition-all duration-300 lg:flex lg:flex-col ${panelCollapsed ? "w-[94px] px-3 pb-3 pt-4" : "w-[396px] px-8 pb-4 pt-7"}`}>
           {panelCollapsed ? (
@@ -409,10 +409,10 @@ export default function App() {
         </aside>
 
         <section className="flex min-w-0 flex-1 flex-col gap-3">
-          <header className="flex h-[72px] items-center justify-between rounded-[20px] border border-[#ececec] bg-white px-4 shadow-sm sm:px-5 lg:rounded-[24px] lg:px-8">
+          <header className="flex h-[60px] items-center justify-between rounded-[20px] border border-[#ececec] bg-white px-3 shadow-sm sm:h-[72px] sm:px-5 lg:rounded-[24px] lg:px-8">
             <div className="flex items-center gap-2 text-[#9ea1a7] sm:gap-4">
               <button className="rounded-full p-1 text-[#2f3135] shadow-sm transition-all duration-200 hover:-translate-y-0.5 hover:bg-[#f3f3f3] hover:shadow-[0_4px_12px_rgba(0,0,0,0.08)] active:scale-95" aria-label="Back" onClick={resetToUpload}>
-                <ArrowLeftIcon className="h-8 w-8" />
+                <ArrowLeftIcon className="h-6 w-6 sm:h-8 sm:w-8" />
               </button>
               <span className="text-base font-semibold text-[#2f3135] sm:hidden">VedaAI</span>
               <button onClick={goToExams} className="hidden items-center gap-2 rounded-xl px-3 py-2 text-[#9ea1a7] shadow-[0_6px_14px_rgba(0,0,0,0.03)] transition-all duration-300 ease-out hover:-translate-y-0.5 hover:bg-[#f7f7f7] hover:shadow-[0_10px_18px_rgba(0,0,0,0.1)] active:scale-[0.97] sm:flex">
@@ -424,7 +424,7 @@ export default function App() {
             <div className="flex items-center gap-2 sm:gap-3 lg:gap-4">
               <button className="hidden lg:flex h-10 w-10 items-center justify-center rounded-full bg-white text-[#2d2f32] text-lg font-bold shadow-sm transition-all duration-200 hover:-translate-y-0.5 hover:bg-[#f0f0f0] hover:shadow-[0_4px_12px_rgba(0,0,0,0.15)] active:scale-90">?</button>
               <div className="relative">
-                <button className="flex h-10 w-10 items-center justify-center rounded-full bg-white text-[#2d2f32] shadow-sm transition-all duration-200 hover:-translate-y-0.5 hover:bg-[#f0f0f0] hover:shadow-[0_4px_12px_rgba(0,0,0,0.15)] active:scale-90"><BellIcon className="h-6 w-6" /></button>
+                <button className="flex h-8 w-8 items-center justify-center rounded-full bg-white text-[#2d2f32] shadow-sm transition-all duration-200 hover:-translate-y-0.5 hover:bg-[#f0f0f0] hover:shadow-[0_4px_12px_rgba(0,0,0,0.15)] active:scale-90 sm:h-10 sm:w-10"><BellIcon className="h-5 w-5 sm:h-6 sm:w-6" /></button>
                 <span className="absolute right-2 top-1.5 h-2.5 w-2.5 rounded-full bg-[#ff5a27]" />
               </div>
               <button className="hidden lg:flex h-10 w-10 items-center justify-center rounded-full bg-white text-[#2d2f32] shadow-sm transition-all duration-200 hover:-translate-y-0.5 hover:bg-[#f0f0f0] hover:shadow-[0_4px_12px_rgba(0,0,0,0.15)] active:scale-90"><SparkIcon className="h-6 w-6" /></button>
@@ -437,12 +437,11 @@ export default function App() {
                 </>
               ) : (
                 <div className="flex items-center gap-2">
-                  <button onClick={() => openAuthModal("login")} className="rounded-full border border-[#d4d6db] bg-white px-4 py-2 text-sm font-medium text-[#303030] shadow-sm transition-all duration-200 hover:-translate-y-0.5 hover:bg-[#f5f6f7] hover:shadow-[0_4px_14px_rgba(0,0,0,0.1)] active:scale-[0.97]">Sign In</button>
-                  <button onClick={() => openAuthModal("signup")} className="rounded-full bg-[#303030] px-4 py-2 text-sm font-medium text-white shadow-[0_4px_14px_rgba(0,0,0,0.25)] transition-all duration-200 hover:-translate-y-0.5 hover:bg-[#1f1f1f] hover:shadow-[0_6px_20px_rgba(0,0,0,0.35)] active:scale-[0.97]">Sign Up</button>
+                  <button onClick={() => openAuthModal("login")} className="rounded-full border border-[#d4d6db] bg-white px-2.5 py-1.5 text-xs font-medium text-[#303030] shadow-sm transition-all duration-200 hover:-translate-y-0.5 hover:bg-[#f5f6f7] hover:shadow-[0_4px_14px_rgba(0,0,0,0.1)] active:scale-[0.97] sm:px-4 sm:py-2 sm:text-sm">Sign In</button>
+                  <button onClick={() => openAuthModal("signup")} className="rounded-full bg-[#303030] px-2.5 py-1.5 text-xs font-medium text-white shadow-[0_4px_14px_rgba(0,0,0,0.25)] transition-all duration-200 hover:-translate-y-0.5 hover:bg-[#1f1f1f] hover:shadow-[0_6px_20px_rgba(0,0,0,0.35)] active:scale-[0.97] sm:px-4 sm:py-2 sm:text-sm">Sign Up</button>
                 </div>
               )}
-              <button onClick={() => setMenuOpen(true)} className="rounded-full bg-[#f7f7f7] p-2 text-[#2f3135] shadow-sm transition-all duration-200 hover:bg-[#efefef] hover:shadow-[0_4px_12px_rgba(0,0,0,0.08)] active:scale-95 lg:hidden" aria-label="Open menu">
-                <MenuIcon className="h-6 w-6" />
+              <button onClick={() => setMenuOpen(true)} className="rounded-full bg-[#f7f7f7] p-1.5 text-[#2f3135] shadow-sm transition-all duration-200 hover:bg-[#efefef] hover:shadow-[0_4px_12px_rgba(0,0,0,0.08)] active:scale-95 lg:hidden sm:p-2"><MenuIcon className="h-5 w-5 sm:h-6 sm:w-6" />
               </button>
             </div>
           </header>
@@ -450,12 +449,12 @@ export default function App() {
           <main ref={mainRef} className="hide-scrollbar relative flex min-h-0 flex-1 items-start justify-center overflow-auto rounded-[24px] border border-[#ececec] bg-[#f6f6f6] px-3 pb-8 pt-6 shadow-[inset_0_10px_35px_rgba(120,120,120,0.08)] sm:px-5 sm:pt-8 lg:rounded-[30px] lg:px-8 lg:pt-10">
             {viewState === "upload" ? (
               <div className="w-full max-w-[1020px]">
-                <h2 className="mx-auto max-w-[460px] text-center text-xl font-semibold leading-tight text-[#2f3135] sm:max-w-none sm:text-3xl md:text-4xl lg:whitespace-nowrap lg:text-5xl lg:leading-tight">
+                <h2 className="mx-auto max-w-[460px] text-center text-lg font-semibold leading-tight text-[#2f3135] sm:text-xl sm:max-w-none md:text-4xl lg:whitespace-nowrap lg:text-5xl lg:leading-tight">
                   <span className="text-[#2f3135]">Upload </span>
                   <span className="rounded-xl bg-[#ffe9df] px-2 text-[#ff5524]">Question Paper <br className="sm:hidden" />&amp; Answer Sheets</span>
                 </h2>
-                <p className="mt-3 text-center text-sm text-[#5a5d62] sm:text-base lg:text-lg">Upload both files to get started</p>
-                <motion.div className="relative mx-auto mt-6 h-36 w-36 sm:mt-8 sm:h-44 sm:w-44 md:mt-10 md:h-52 md:w-52 lg:h-60 lg:w-60" initial={{ opacity: 0 }} animate={{ opacity: 1 }}>
+                <p className="mt-2 text-center text-xs text-[#5a5d62] sm:mt-3 sm:text-base lg:text-lg">Upload both files to get started</p>
+                <motion.div className="relative mx-auto mt-4 h-28 w-28 sm:mt-6 sm:h-36 sm:w-36 md:mt-10 md:h-52 md:w-52 lg:h-60 lg:w-60" initial={{ opacity: 0 }} animate={{ opacity: 1 }}>
                   <div className="absolute inset-0 rounded-full bg-[#f8e7e1]" />
                   <div className="absolute inset-[22px] rounded-full bg-[#f9b9a4]" />
                   <div className="absolute inset-[46px] overflow-hidden rounded-full bg-white shadow-[0_8px_20px_rgba(0,0,0,0.16)]">
@@ -466,8 +465,8 @@ export default function App() {
                   <OrbitBadge className="right-1 top-[88px] sm:right-[6px] sm:top-[138px]"><SparkIcon className="h-3.5 w-3.5" /></OrbitBadge>
                   <OrbitBadge className="left-6 bottom-1 sm:left-[48px] sm:bottom-[14px]"><SettingsIcon className="h-3.5 w-3.5" /></OrbitBadge>
                 </motion.div>
-                <div className="mx-auto mt-5 w-full max-w-[600px] rounded-2xl border border-[#ececec] bg-[#efefef] p-2 shadow-[0_4px_12px_rgba(0,0,0,0.05)] sm:mt-6 sm:max-w-[700px] sm:rounded-[28px] sm:p-3 md:max-w-[800px] md:rounded-[34px] md:p-4 lg:max-w-[980px]">
-                  <div className="grid gap-4 md:grid-cols-2">
+                <div className="mx-auto mt-4 w-full max-w-[600px] rounded-xl border border-[#ececec] bg-[#efefef] p-1.5 shadow-[0_4px_12px_rgba(0,0,0,0.05)] sm:mt-6 sm:max-w-[700px] sm:rounded-[28px] sm:p-3 md:max-w-[800px] md:rounded-[34px] md:p-4 lg:max-w-[980px]">
+                  <div className="grid gap-2 sm:gap-4 md:grid-cols-2">
                     <UploadBox label="Question Paper" file={questionFile} onPick={setQuestionFile} />
                     <UploadBox label="Answer Sheet" file={answerFile} onPick={setAnswerFile} />
                   </div>
@@ -1068,13 +1067,13 @@ function OrbitBadge({ className, children }: { className: string; children: Reac
 
 function UploadBox({ label, file, onPick }: { label: string; file: File | null; onPick: (file: File | null) => void }) {
   return (
-    <label className="relative isolate flex min-h-[190px] cursor-pointer flex-col items-center justify-center rounded-[24px] border-2 border-dashed border-[#d4d6da] bg-white px-4 text-center shadow-[0_10px_24px_rgba(0,0,0,0.08)] transition hover:-translate-y-0.5 hover:shadow-[0_14px_30px_rgba(0,0,0,0.12)] sm:min-h-[222px] sm:rounded-[30px]">
+    <label className="relative isolate flex min-h-[140px] cursor-pointer flex-col items-center justify-center rounded-[20px] border-2 border-dashed border-[#d4d6da] bg-white px-3 text-center shadow-[0_10px_24px_rgba(0,0,0,0.08)] transition hover:-translate-y-0.5 hover:shadow-[0_14px_30px_rgba(0,0,0,0.12)] sm:min-h-[190px] sm:rounded-[24px] sm:px-4 sm:min-h-[222px] sm:rounded-[30px]">
       <span className="pointer-events-none absolute inset-[6px] -z-10 rounded-[20px] bg-white/70 backdrop-blur-[1px] sm:rounded-[26px]" />
       <span className="pointer-events-none absolute -bottom-4 left-6 right-6 -z-20 h-7 rounded-full bg-white/80 blur-md shadow-[0_10px_20px_rgba(0,0,0,0.16)]" />
       <input type="file" className="hidden" accept=".pdf,.jpg,.jpeg,.png" onChange={(e) => onPick(e.target.files?.[0] ?? null)} />
-      <UploadIcon className="h-8 w-8 text-[#36383c]" />
-      <p className="mt-4 text-lg font-semibold text-[#2f3135] sm:text-xl md:text-2xl">Upload <span className="text-[#ff5524]">{label}</span></p>
-      <p className="text-xs text-[#9c9ea4] sm:text-sm">Max 10MB</p>
+      <UploadIcon className="h-6 w-6 text-[#36383c] sm:h-8 sm:w-8" />
+      <p className="mt-2 text-base font-semibold text-[#2f3135] sm:mt-4 sm:text-xl md:text-2xl">Upload <span className="text-[#ff5524]">{label}</span></p>
+      <p className="text-[10px] text-[#9c9ea4] sm:text-xs sm:text-sm">Max 10MB</p>
       {file && <div className="mt-2 flex items-center gap-2 rounded-full border border-[#e0e0e0] bg-[#f5f5f5] px-3 py-1"><span className="max-w-[160px] truncate text-sm text-[#3f4247]">{file.name}</span><button type="button" onClick={(e) => { e.preventDefault(); e.stopPropagation(); onPick(null); }} className="flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-[#d4d4d4] text-[#666] transition-all duration-200 hover:bg-[#ff5a2b] hover:text-white active:scale-90"><CloseIcon className="h-3 w-3" /></button></div>}
     </label>
   );

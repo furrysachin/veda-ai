@@ -123,7 +123,68 @@ def extract_words_tesseract(pdf_path, dpi=300):
     return pages
 
 
+def extract_words_image(image_path):
+    """Extract words from a single image using Gemini Vision."""
+    import base64
+    import mimetypes
+    from ..config import GEMINI_API_KEY, GEMINI_MODEL
+
+    if not GEMINI_API_KEY:
+        return []
+
+    try:
+        import google.generativeai as genai
+        genai.configure(api_key=GEMINI_API_KEY)
+        model = genai.GenerativeModel(GEMINI_MODEL)
+
+        with open(image_path, "rb") as f:
+            image_data = f.read()
+
+        mime, _ = mimetypes.guess_type(image_path)
+        mime = mime or "image/png"
+
+        response = model.generate_content([
+            {"inline_data": {"mime_type": mime, "data": base64.b64encode(image_data).decode()}},
+            "Extract ALL text from this image. For each word or text fragment, return a JSON array like: [{\"text\": \"word\", \"x0\": 10, \"y0\": 20, \"x1\": 50, \"y1\": 35}]. Use pixel coordinates relative to the image. Return ONLY the JSON array."
+        ])
+
+        import json
+        text = response.text.strip()
+        if text.startswith("["):
+            words = json.loads(text)
+        else:
+            # Fallback: treat whole text as one block
+            words = [{"text": text, "x0": 0, "y0": 0, "x1": 100, "y1": 100}]
+
+        from PIL import Image
+        img = Image.open(image_path)
+        img_w, img_h = img.size
+
+        page_words = []
+        for w in words:
+            page_words.append({
+                "text": w.get("text", ""),
+                "x0": float(w.get("x0", 0)),
+                "y0": float(w.get("y0", 0)),
+                "x1": float(w.get("x1", img_w)),
+                "y1": float(w.get("y1", img_h)),
+                "block": 0,
+                "line": 0,
+                "word": len(page_words),
+            })
+
+        return [{"page": 1, "words": page_words, "width": img_w, "height": img_h}]
+    except Exception as e:
+        print(f"[OCR] Image extraction failed: {e}")
+        return []
+
+
 def extract_words(pdf_path, force_ocr=False):
+    # Handle image files directly
+    from .pdf_service import is_image_file
+    if is_image_file(pdf_path):
+        return extract_words_image(pdf_path)
+
     if force_ocr:
         tesseract_pages = extract_words_tesseract(pdf_path)
         if tesseract_pages:

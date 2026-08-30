@@ -1107,10 +1107,10 @@ function UploadBox({ label, file, onPick }: { label: string; file: File | null; 
     <label className="relative isolate flex min-h-[190px] cursor-pointer flex-col items-center justify-center rounded-[24px] border-2 border-dashed border-[#d4d6da] bg-white px-4 text-center shadow-[0_10px_24px_rgba(0,0,0,0.08)] transition hover:-translate-y-0.5 hover:shadow-[0_14px_30px_rgba(0,0,0,0.12)] sm:min-h-[222px] sm:rounded-[30px]">
       <span className="pointer-events-none absolute inset-[6px] -z-10 rounded-[20px] bg-white/70 backdrop-blur-[1px] sm:rounded-[26px]" />
       <span className="pointer-events-none absolute -bottom-4 left-6 right-6 -z-20 h-7 rounded-full bg-white/80 blur-md shadow-[0_10px_20px_rgba(0,0,0,0.16)]" />
-      <input type="file" className="hidden" accept=".pdf,.jpg,.jpeg,.png" onChange={(e) => onPick(e.target.files?.[0] ?? null)} />
+      <input type="file" className="hidden" accept=".pdf,.jpg,.jpeg,.png,.webp,.bmp,.tiff" onChange={(e) => onPick(e.target.files?.[0] ?? null)} />
       <UploadIcon className="h-8 w-8 text-[#36383c]" />
       <p className="mt-4 text-lg font-semibold text-[#2f3135] sm:text-xl md:text-2xl">Upload <span className="text-[#ff5524]">{label}</span></p>
-      <p className="text-xs text-[#9c9ea4] sm:text-sm">Max 10MB</p>
+      <p className="text-xs text-[#9c9ea4] sm:text-sm">PDF, PNG, JPG, JPEG, WEBP (max 10MB)</p>
       {file && <div className="mt-2 flex items-center gap-2 rounded-full border border-[#e0e0e0] bg-[#f5f5f5] px-3 py-1"><span className="max-w-[160px] truncate text-sm text-[#3f4247]">{file.name}</span><button type="button" onClick={(e) => { e.preventDefault(); e.stopPropagation(); onPick(null); }} className="flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-[#d4d4d4] text-[#666] transition-all duration-200 hover:bg-[#ff5a2b] hover:text-white active:scale-90"><CloseIcon className="h-3 w-3" /></button></div>}
     </label>
   );

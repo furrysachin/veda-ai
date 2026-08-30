@@ -1,5 +1,5 @@
 import re
-from .pdf_service import extract_pdf_text
+from .pdf_service import extract_pdf_text, extract_image_text, is_image_file
 
 
 QUESTION_PATTERN = re.compile(
@@ -30,12 +30,15 @@ def normalize_text(text):
 
 
 def extract_questions(
-    pdf_path
+    file_path
 ):
 
-    pages = extract_pdf_text(
-        pdf_path
-    )
+    if is_image_file(file_path):
+        pages = extract_image_text(file_path)
+    else:
+        pages = extract_pdf_text(
+            file_path
+        )
 
     questions = []
 

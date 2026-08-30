@@ -19,12 +19,23 @@ from .storage.assessment_store import create_assessment, get_assessment, update_
 
 app = FastAPI(title="VedaAI Assessment API")
 
+ALLOWED_EXTENSIONS = {".pdf", ".png", ".jpg", ".jpeg", ".webp", ".bmp", ".tiff"}
+
+def _validate_file(filename: str):
+    ext = os.path.splitext(filename or "")[1].lower()
+    if ext not in ALLOWED_EXTENSIONS:
+        raise HTTPException(
+            status_code=400,
+            detail=f"Unsupported file type '{ext}'. Allowed: {', '.join(sorted(ALLOWED_EXTENSIONS))}"
+        )
+
 app.add_middleware(
     CORSMiddleware,
     allow_origins=[
         "http://localhost:5173",
         "http://127.0.0.1:5173",
         "https://veda-ai.wasmer.app",
+        "https://veda-ai-eight-sooty.vercel.app",
     ],
     allow_credentials=True,
     allow_methods=["*"],
@@ -38,6 +49,8 @@ app.mount("/processed", StaticFiles(directory="processed"), name="processed")
 # Assessment endpoints
 @app.post("/api/assessment/upload")
 async def upload_assessment(questionPaper: UploadFile = File(...), answerSheet: UploadFile = File(...)):
+    _validate_file(questionPaper.filename)
+    _validate_file(answerSheet.filename)
     assessment_id = str(uuid.uuid4())
     
     os.makedirs("uploads/questions", exist_ok=True)

@@ -36,6 +36,18 @@ os.makedirs(UPLOAD_DIR, exist_ok=True)
 os.makedirs(PROCESSED_DIR, exist_ok=True)
 
 
+ALLOWED_EXTENSIONS = {".pdf", ".png", ".jpg", ".jpeg", ".webp", ".bmp", ".tiff"}
+
+
+def _validate_file(filename: str):
+    ext = os.path.splitext(filename or "")[1].lower()
+    if ext not in ALLOWED_EXTENSIONS:
+        raise HTTPException(
+            status_code=400,
+            detail=f"Unsupported file type '{ext}'. Allowed: {', '.join(sorted(ALLOWED_EXTENSIONS))}"
+        )
+
+
 # In-memory store (resets on cold start, but works for single request)
 _assessments: Dict[str, Dict[str, Any]] = {}
 
@@ -54,6 +66,8 @@ async def upload_assessment(
     answerSheet: UploadFile = File(...)
 ):
     """Upload both files and process synchronously (Vercel-compatible)."""
+    _validate_file(questionPaper.filename)
+    _validate_file(answerSheet.filename)
     assessment_id = str(uuid.uuid4())
 
     # Create directories

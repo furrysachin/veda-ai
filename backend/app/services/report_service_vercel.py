@@ -1,12 +1,12 @@
 import os
 
-from .pdf_service import render_pdf_pages
+from .pdf_service import render_pdf_pages, render_image_to_page, is_image_file
 
 # Use /tmp for Vercel serverless
 PROCESSED_DIR = "/tmp/processed"
 
 
-def build_answer_sheet_pages(assessment_id, answer_pdf_path):
+def build_answer_sheet_pages(assessment_id, answer_path):
     """Build answer sheet pages using /tmp directory (Vercel-compatible)."""
     base_dir = os.path.join(
         PROCESSED_DIR,
@@ -17,10 +17,13 @@ def build_answer_sheet_pages(assessment_id, answer_pdf_path):
     # Ensure directory exists
     os.makedirs(base_dir, exist_ok=True)
 
-    rendered = render_pdf_pages(
-        answer_pdf_path,
-        base_dir
-    )
+    if is_image_file(answer_path):
+        rendered = render_image_to_page(answer_path, base_dir)
+    else:
+        rendered = render_pdf_pages(
+            answer_path,
+            base_dir
+        )
 
     pages = []
 

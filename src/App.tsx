@@ -130,7 +130,18 @@ export default function App() {
       const assessmentId: string = uploadJson.assessment_id;
       console.log("[VedaAI] Uploaded", assessmentId);
 
-      // Try polling first (works with local backend), fallback to direct result (Vercel)
+      // Start fake progress animation while backend processes
+      let fakeProgress = 0;
+      const progressInterval = setInterval(() => {
+        fakeProgress += Math.random() * 3 + 1;
+        if (fakeProgress > 90) fakeProgress = 90;
+        setExtractingProgress({
+          progress: Math.round(fakeProgress),
+          stage: fakeProgress < 15 ? "extracting_questions" : fakeProgress < 40 ? "ocr_answer_sheet" : fakeProgress < 65 ? "mapping_answers" : fakeProgress < 85 ? "evaluating_answers" : "rendering_pages",
+          message: fakeProgress < 15 ? "Reading question paper..." : fakeProgress < 40 ? "Reading answer sheet..." : fakeProgress < 65 ? "Matching answers to questions..." : fakeProgress < 85 ? "AI evaluating answers..." : "Rendering answer sheets...",
+        });
+      }, 600);
+
       let finalJson: any = null;
       try {
         const processRes = await fetch(api(`/assessment/${assessmentId}/process`), {
@@ -141,21 +152,23 @@ export default function App() {
           throw new Error(`Process start failed (${processRes.status}): ${text || processRes.statusText}`);
         }
         const processJson = await processRes.json();
-        // If Vercel backend returned the full result directly (sync mode)
         if (processJson.status === "completed" && Array.isArray(processJson.questions)) {
           finalJson = processJson;
         } else {
-          // Local backend - poll for status
           finalJson = await pollUntilDone(assessmentId);
         }
       } catch (pollErr) {
-        // Polling failed, try fetching result directly
         console.warn("[VedaAI] Polling failed, trying direct result fetch:", pollErr);
         const resultRes = await fetch(api(`/assessment/${assessmentId}`));
         if (resultRes.ok) {
           finalJson = await resultRes.json();
         }
+      } finally {
+        clearInterval(progressInterval);
       }
+      // Jump to 100% before showing result
+      setExtractingProgress({ progress: 100, stage: "completed", message: "Done!" });
+      await new Promise(r => setTimeout(r, 400));
       applyResult(finalJson);
     } catch (err: any) {
       console.error("[VedaAI] API call failed:", err);
